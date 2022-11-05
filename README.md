@@ -1,3 +1,26 @@
+# google-sheets-fetch
+Export a Google Sheets cell range to PDF
+
+## How's going
+![SO comment saying that what I'm trying to do is insane](public/brave_wJ2PlCLyuF.png "title")
+![Joaquin Phoenix's Joker smoking a cigarette meme](public/joker.png)
+
+While I was trying to implement the project's goal, I discovered some things:
+
+As per [this SO comment](https://stackoverflow.com/a/71426414/12443809), you can do exactly what I'm looking for (and it works!) by searching this from your browser:
+
+`https://docs.google.com/spreadsheets/d/{SPREADSHEET_ID}/export?format=pdf&portrait=false&gid={SHEET_ID}`
+
+From what I've tested though, It's not that simple to get the same rights that the browser gets you while trying to fetch your resource from a Node.js app. A detailed approach for no user intervention is described in [this SO post](https://stackoverflow.com/questions/19766912/how-do-i-authorise-an-app-web-or-installed-without-user-intervention), the conclusion being that is pretty complicated.
+
+Also, a big issue is that the Google Sheets v4 API doesn't offer a way to export a spreadsheet.
+
+The [Drive API does](https://developers.google.com/drive/api/v3/reference/files/export), but I don't know if that will work that way, as it seems quite different than the export comment I've linked to above.
+
+Looking at the Google Sheets v4 API source code for a bit, I see that there's no way of modifying the resource paths that are being hit while calling the library's methods.
+
+[This SO comment](https://stackoverflow.com/a/23567732/12443809) points out a big difference: Your Drive account and the app's Drive account are 2 different things. To access a user's files, including your own, you **HAVE TO** use OAuth2.0 with an authorization URL.
+
 ## Links
 google-auth-library - npm
 https://www.npmjs.com/package/google-auth-library
@@ -16,15 +39,6 @@ https://github.com/googleapis/google-api-nodejs-client/blob/main/samples/sheets/
 
 Using OAuth 2.0 for Server to Server Applications  |  Authorization  |  Google Developers
 https://developers.google.com/identity/protocols/oauth2/service-account#httprest
-
-Setting GOOGLE_APPLICATION_CREDENTIALS for BigQuery Python CLI - Stack Overflow
-https://stackoverflow.com/questions/35159967/setting-google-application-credentials-for-bigquery-python-cli
-
-How to import a JSON file in ECMAScript 6? - Stack Overflow
-https://stackoverflow.com/questions/34944099/how-to-import-a-json-file-in-ecmascript-6
-
-node.js - How to augment process.env in TypeScript? - Stack Overflow
-https://stackoverflow.com/questions/47008773/how-to-augment-process-env-in-typescript
 
 Node.js client library  |  Google Cloud
 https://cloud.google.com/nodejs/docs/reference/google-auth-library/latest

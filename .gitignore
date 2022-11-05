@@ -1,3 +1,6 @@
 node_modules/
 oa2.json
 sa.json
+export/*
+
+!.gitkeep
