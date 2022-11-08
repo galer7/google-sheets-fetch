@@ -1,7 +1,15 @@
 # google-sheets-fetch
 Export a Google Sheets cell range to PDF
 
+1. write data to excel
+   1. throw if the annex for the current month is missing
+2. export excel sheet via fetching URL
+3. place signature on pdf
+4. send signed pdf via email
+
 ## How's going
+**Update**: Got it working following [this sample](https://github.com/googleapis/google-auth-library-nodejs/blob/main/samples/oauth2.js) and updating it to include the `redirect_uri` from the OAuth client IDs file [when generating the auth URL](https://github.com/googleapis/google-auth-library-nodejs/blob/main/samples/oauth2.js#L59-L62).
+
 ![SO comment saying that what I'm trying to do is insane](public/brave_wJ2PlCLyuF.png "title")
 ![Joaquin Phoenix's Joker smoking a cigarette meme](public/joker.png)
 
