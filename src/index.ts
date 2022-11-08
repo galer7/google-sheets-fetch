@@ -1,8 +1,9 @@
 import * as fs from "fs";
-import { OAuth2Client, JWT } from "google-auth-library";
-import { getOAuth2Client } from "./oauth2";
-import { getJWTClient } from "./jwt";
+import { OAuth2Client } from "google-auth-library";
+import { getOAuth2Client } from "./auth/oauth2";
+import getServiceAccountClient from "./auth/serviceAccountAuth";
 import path from "path";
+import { JSONClient } from "google-auth-library/build/src/auth/googleauth";
 
 // @ts-expect-error
 global.__rootdir = path.resolve(__dirname, "..");
@@ -17,12 +18,16 @@ async function fetchWithOAuth2Client() {
 }
 
 /** Uses Service Account */
-async function fetchWithJWTClient() {
-  const jwtClient = await getJWTClient();
-  getResourceByUrl(URL, jwtClient);
+async function fetchWithServiceAccountAuth() {
+  const saAuthClient = await getServiceAccountClient([
+    "https://www.googleapis.com/auth/drive",
+    "https://www.googleapis.com/auth/drive.file",
+    "https://www.googleapis.com/auth/drive.readonly",
+  ]);
+  getResourceByUrl(URL, saAuthClient);
 }
 
-async function getResourceByUrl(url: string, auth: JWT | OAuth2Client) {
+async function getResourceByUrl(url: string, auth: OAuth2Client | JSONClient) {
   // Make a simple request using our pre-authenticated client. The `request()` method takes an GaxiosOptions object. Visit https://github.com/JustinBeckwith/gaxios.
   const res = await auth.request<ArrayBuffer>({
     url,
@@ -43,10 +48,13 @@ async function getResourceByUrl(url: string, auth: JWT | OAuth2Client) {
 
     pdfWriteStream.end();
   });
-  // After acquiring an access_token, you may want to check on the audience, expiration,
-  // or original scopes requested.  You can do that with the `getTokenInfo` method.
-  const tokenInfo = await auth.getTokenInfo(auth.credentials.access_token!);
-  console.log({ tokenInfo });
+
+  if (auth instanceof OAuth2Client) {
+    // After acquiring an access_token, you may want to check on the audience, expiration,
+    // or original scopes requested.  You can do that with the `getTokenInfo` method.
+    const tokenInfo = await auth.getTokenInfo(auth.credentials.access_token!);
+    console.log({ tokenInfo });
+  }
 }
 
-fetchWithOAuth2Client();
+fetchWithServiceAccountAuth();

@@ -1,6 +1,6 @@
 import { OAuth2Client } from "google-auth-library";
 import * as http from "http";
-import * as keys from "../oa2.json";
+import * as keys from "../../oa2.json";
 import * as url from "url";
 import open from "open";
 import destroyer from "server-destroy";
